@@ -29,7 +29,7 @@ public class JWT_util {
 	
 	Date date = new Date();
 	
-	long expiryduration = 15 * 60 ;
+	long expiryduration = 60 * 60 ;
 	
 	long millisecounds = System.currentTimeMillis();
 	
@@ -45,8 +45,7 @@ public class JWT_util {
 	
 		Claims claims = Jwts.claims().setIssuer(user_login.getId()+"").setIssuedAt(date).setExpiration(expiryat);	
 		
-		claims.put("name", user_login.getName());
-		claims.put("email", user_login.getEmail());
+
 				
 		return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512,secret ).compact();
 			

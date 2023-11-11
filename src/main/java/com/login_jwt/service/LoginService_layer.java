@@ -66,9 +66,9 @@ public class LoginService_layer {
 
 	        usermodel.setCreatedAt(currentDateTimeAsString);
         
-	        user_dao.signup_dao(usermodel);
+	        User_model usm =       user_dao.signup_dao(usermodel);
 
-		apiresponse.setData(usermodel);
+		apiresponse.setData(usm);
 		   
           return apiresponse;
 		
@@ -78,9 +78,9 @@ public class LoginService_layer {
 	
 	public APIResponse login(Login_user login_json) {
 	
-		System.out.println("from json  : "+ login_json.getName());
+		System.out.println("username : "+ login_json.getName());
 
-		System.out.println("from json  :" + login_json.getPassword());
+		System.out.println("password" + login_json.getPassword());
 		
 		User_model user_login_dao =  user_dao.login(login_json);
 		
@@ -96,21 +96,15 @@ public class LoginService_layer {
                // generate JWT			   
 			   String token  = jwtutil.generateJWT(user_login_dao);	
 			   
-			   Map<String,Object> token_HS = new HashMap<>();
+			   Map<String,Object> token_HM = new HashMap<>();
 			   
-			   token_HS.put("accesstoken" , token);
+			   token_HM.put("accesstoken" , token);
 			   
-			   apiresponse.setData(token_HS);   
+			   apiresponse.setData(token_HM);   
 		   }
 		 
 		return apiresponse  ;
 		
 	}
-	
-	
-	
-	
-	
-	
 	
 }

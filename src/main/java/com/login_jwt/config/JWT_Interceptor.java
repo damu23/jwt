@@ -20,15 +20,19 @@ public class JWT_Interceptor implements HandlerInterceptor {
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request,HttpServletResponse response, Object handler) throws Exception {
+		
+		System.out.println("Requested URI :_:_:  " + request.getRequestURI());
+		
+		String accesstoken = request.getHeader("accesstoken");
+		
 	
-		System.out.println("******************************preHandle interceptor went in");
+			if(!request.getRequestURI().equalsIgnoreCase("/login")){
+			jwtutil.verifyJWT(accesstoken);
+			System.out.println("prehandle token validated");
+			
+			}
+	
 		
-		System.out.println("printing the URI :: " + request.getRequestURI());
-		String auth = request.getHeader("auth");
-		
-		System.out.println(auth+ " accesstoken");
-		
-		jwtutil.verifyJWT(auth);		
 		
 		return HandlerInterceptor.super.preHandle(request, response, handler);
 	}
@@ -36,7 +40,7 @@ public class JWT_Interceptor implements HandlerInterceptor {
 	@Override
 	public void postHandle(HttpServletRequest request,HttpServletResponse response, Object handler,ModelAndView modelAndView) throws Exception {
 		
-		System.out.println("******************************postHandle interceptor method went in");
+		
 		
 		
 		HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
@@ -45,7 +49,7 @@ public class JWT_Interceptor implements HandlerInterceptor {
 	@Override
 	public void afterCompletion(HttpServletRequest request,HttpServletResponse response,Object handler, Exception ex)throws Exception {
 		
-		System.out.println("*************************************after completion interceptor method went in");
+	
 		
 		HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
 	}

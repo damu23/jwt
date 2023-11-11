@@ -52,9 +52,9 @@ public class LoginController {
 	}
 	
 	@GetMapping("/validatetoken")
-	public ResponseEntity<APIResponse> validateToken(@RequestHeader(value = "auth" ) String token ){
+	public ResponseEntity<APIResponse> validateToken(@RequestHeader(value = "accesstoken" ) String token ){
 	
-		APIResponse apiresponse = new APIResponse();
+
 		
 	try{
 		jwtutil.verifyJWT(token);
@@ -63,16 +63,14 @@ public class LoginController {
 		e.printStackTrace();
 		
 	}
-	System.out.println(token );
 		
-		apiresponse.setStatus(HttpStatus.OK.value());
+	APIResponse apiresponse = new APIResponse();
+	
+	apiresponse.setStatus(HttpStatus.OK.value());
 		apiresponse.setData("Token validated good to go ");
 		
 		return ResponseEntity.status(apiresponse.getStatus()).body(apiresponse);
-		
-		
+				
 	}
 	
 }
-	
-	
