@@ -8,11 +8,13 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.login_jwt.DAO.User_dao;
 import com.login_jwt.common.APIResponse;
 import com.login_jwt.model.Login_user;
+import com.login_jwt.model.RefreshToken;
 import com.login_jwt.model.User_model;
 import com.login_jwt.util.JWT_util;
 
@@ -21,6 +23,8 @@ import com.login_jwt.util.JWT_util;
 @Service
 public class LoginService_layer {
 
+	
+	
 	public LoginService_layer() {
 		super();
 	}
@@ -55,7 +59,12 @@ public class LoginService_layer {
 		}
 		
 		if(Objects.nonNull(usermodel.getPassword())&& !"".equalsIgnoreCase(usermodel.getPassword())){
-			usermodel.setPassword(usermodel.getPassword());
+			
+			BCryptPasswordEncoder encryptpassword = new BCryptPasswordEncoder();
+		         
+			String encryptedpassword = encryptpassword.encode(usermodel.getPassword());			
+			
+			usermodel.setPassword(encryptedpassword);
 		}
 		
 		 LocalDateTime currentDateTime = LocalDateTime.now();
@@ -73,16 +82,19 @@ public class LoginService_layer {
           return apiresponse;
 		
 	}
-
-
 	
 	public APIResponse login(Login_user login_json) {
-	
-		System.out.println("username : "+ login_json.getName());
 
-		System.out.println("password" + login_json.getPassword());
 		
-		User_model user_login_dao =  user_dao.login(login_json);
+		User_dao u_dao = new User_dao();
+		
+		User_model user_login_dao =  u_dao.login(login_json); 
+		
+		System.out.println("in service layer " + user_login_dao.getName() + " ::: is the  name from DAO");
+		
+		////////////////////
+		
+		BCryptPasswordEncoder decrypt_password = new BCryptPasswordEncoder();			
 		
 		
 		   if(user_login_dao.getName() == null){
@@ -90,12 +102,17 @@ public class LoginService_layer {
 			   apiresponse.setData("user authentication failed");
 		   }
 		
-		   else if(user_login_dao.getName().equalsIgnoreCase(login_json.getName()) && 
-				   user_login_dao.getPassword().equalsIgnoreCase(login_json.getPassword())) {
-			   
+		   else if(user_login_dao.getName().equalsIgnoreCase(login_json.getName()) &&
+				   //decrypting password 
+				   decrypt_password.matches(login_json.getPassword(), user_login_dao.getPassword()) ) {
+			   			   
                // generate JWT			   
 			   String token  = jwtutil.generateJWT(user_login_dao);	
 			   
+			   //new generated token insertion for the user  
+			   user_dao.insertGenerated_tokenforUser_dao(user_login_dao.getId(),token);
+			   
+			   // inserting  data as a HashMap
 			   Map<String,Object> token_HM = new HashMap<>();
 			   
 			   token_HM.put("accesstoken" , token);
@@ -106,5 +123,15 @@ public class LoginService_layer {
 		return apiresponse  ;
 		
 	}
+	
+	
+	public RefreshToken refreshtoken(String username){
+	
+//		RefreshTOken.builder().userinfo(user_dao.for_refreshing_token(username)).token
+		
+		
+		return null ;
+	}
+	
 	
 }

@@ -8,12 +8,12 @@ public class APIResponse {
 	
 	 private Integer status;
 	    private Object data;
-	    private Object error;
+	    
 
 	    public APIResponse() {
 	        this.status = HttpStatus.OK.value();
 	        this.data = data;	
-	        this.error = error;
+	      
 	    }
 
 	    public Integer getStatus() {
@@ -32,12 +32,6 @@ public class APIResponse {
 	        this.data = data;
 	    }
 
-	    public Object getError() {
-	        return error;
-	    }
-
-	    public void setError(Object error) {
-	        this.error = error;
-	    }
-
 }
+
+

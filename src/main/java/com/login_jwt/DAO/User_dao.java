@@ -47,29 +47,31 @@ public class User_dao {
 	
 	public User_model login(Login_user login_user) {
 		
+		System.out.println("came into login DAo while doing postman");
 		
-		String query = "select * from usermodel where name = ? and password = ?";
+		Get_connection mysql_connection_obj = new Get_connection();
+				
+		String query = "select * from usermodel where name = ? ";
 		
 		User_model user_obj = new User_model();
 				
 		try {
 					
-			PreparedStatement prst = mysql_connection.getconnection().prepareStatement(query);
+			System.out.println("in DAO  : went into try");
+			PreparedStatement prst = mysql_connection_obj.getconnection().prepareStatement(query);
 			
 			String name = login_user.getName();
-						
-			String password = login_user.getPassword() ;				
-			
+				
 			prst.setString(1, name );
-			
-			prst.setString(2, password);			
 			
 			ResultSet rs =  prst.executeQuery();
 			
 			while(rs.next()) {
 	
+				System.out.println("/////////////////////////////////");
 				System.out.println("this is into DAO layer the name after fetching the query is : " + rs.getString(2));
 				
+				System.out.println(rs.getString(2) + " is the username extracted from DB ");
 				
 				   user_obj.setId(rs.getInt(1));
 			       user_obj.setName(rs.getString(2));
@@ -88,4 +90,63 @@ public class User_dao {
 		return user_obj ; 
 		
 	}
+
+	public void insertGenerated_tokenforUser_dao(int id , String token) {
+		
+		
+		String query = "UPDATE usermodel SET token = ?  WHERE id = ?  " ; 
+		
+		try {
+			
+			PreparedStatement prst = mysql_connection.getconnection().prepareStatement(query);
+			
+			prst.setString(1, token);
+			prst.setInt(2, id);
+			
+			int rs = prst.executeUpdate();
+			
+		}
+		catch(Exception e ){
+			e.printStackTrace();
+		}		
+	}
+	
+	
+public User_model for_refreshing_token(String username) {
+		
+		
+		String query = "select * from usermodel where name = ?";
+		
+		User_model user_obj = new User_model();
+				
+		try {
+					
+			PreparedStatement prst = mysql_connection.getconnection().prepareStatement(query);								
+			
+			prst.setString(1, username );		
+			
+			ResultSet rs =  prst.executeQuery();
+			
+			while(rs.next()) {
+									
+				   user_obj.setId(rs.getInt(1));
+			       user_obj.setName(rs.getString(2));
+			       user_obj.setEmail(rs.getString(3));	
+			       user_obj.setPassword(rs.getString(4));
+			       user_obj.setCreatedAt(rs.getString(5));
+			       user_obj.setPhone(rs.getInt(6));
+			       
+			}
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return user_obj ; 
+		
+	}
+	
+	
+	
 	}

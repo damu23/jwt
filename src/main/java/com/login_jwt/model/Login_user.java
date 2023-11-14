@@ -14,7 +14,7 @@ public class Login_user {
 		super();
 	}
 
-	public Login_user(String name, String password) {
+	public Login_user(String name, String password) {			
 		super();
 		this.name = name;
 		this.password = password;

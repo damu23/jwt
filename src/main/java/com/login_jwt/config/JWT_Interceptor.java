@@ -24,9 +24,10 @@ public class JWT_Interceptor implements HandlerInterceptor {
 		System.out.println("Requested URI :_:_:  " + request.getRequestURI());
 		
 		String accesstoken = request.getHeader("accesstoken");
-		
+		 
 	
-			if(!request.getRequestURI().equalsIgnoreCase("/login")){
+			if(!(request.getRequestURI().contains("login") || request.getRequestURI().contains("/signup"))){
+			
 			jwtutil.verifyJWT(accesstoken);
 			System.out.println("prehandle token validated");
 			

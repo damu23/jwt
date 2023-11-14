@@ -12,6 +12,7 @@ public class User_model {
 	private int phone ;
 	private String password ;
 	private String createdAt ;
+	private String Token ; 
 	
 		
 	public User_model() {
@@ -19,7 +20,8 @@ public class User_model {
 	}
 
 
-	public User_model(int id, String name, String email, int phone, String password, String createdAt) {
+	public User_model(int id, String name, String email, int phone,
+			String password, String createdAt, String token) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -27,8 +29,8 @@ public class User_model {
 		this.phone = phone;
 		this.password = password;
 		this.createdAt = createdAt;
+		Token = token;
 	}
-
 
 	public int getId() {
 		return id;
@@ -87,6 +89,16 @@ public class User_model {
 
 	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
+	}
+
+
+	public String getToken() {
+		return Token;
+	}
+
+
+	public void setToken(String token) {
+		Token = token;
 	}
 
 	
